@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Orange3-Robust"
+version = "0.1.0"
+description = "Robust linear regression (Theil–Sen, RANSAC, Huber) for Orange."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["Orange3>=3.39", "scikit-learn>=1.2"]
+keywords = ["orange3 add-on", "orange", "robust regression"]
+
+[project.entry-points."orange.widgets"]
+"Robust" = "orangecontrib.robust.widgets"
+
+[project.entry-points."orange.canvas.help"]
+"orangecontrib.robust.widgets" = "orangecontrib.robust.widgets:WIDGET_HELP_PATH"
+
+[project.urls]
+Homepage = "https://github.com/yourname/orange3-robust"
+Documentation = "https://orange3-robust.readthedocs.io/"
