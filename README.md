@@ -19,6 +19,36 @@ If you are using the standalone Orange app, use the Python environment that
 belongs to that Orange installation. If the Add-ons dialog supports URL/package
 installation in that build, use the same Git URL.
 
+For the macOS standalone app this command installs into Orange's bundled Python:
+
+```bash
+/Applications/Orange.app/Contents/MacOS/python -m pip install \
+  git+https://github.com/solresol/Orange3-Robust.git
+```
+
+Restart Orange after installing so the widget registry is refreshed.
+
+## Using in Orange
+
+For a new workflow:
+
+1. Add **File** or **Paint Data**.
+2. Add **Select Columns** and set a continuous target variable.
+3. Add **Robust Scale** if you want median/IQR preprocessing before modelling.
+4. Add **Robust Regression** and choose **Huber**, **RANSAC**, or **Theil-Sen**.
+5. Connect **Robust Regression** to **Predictions**, **Test & Score**, or
+   **Data Table** outputs as needed.
+
+The checked demo workflow in `docs/examples/robust-regression-demo.ows` shows
+the recommended wiring:
+
+![Orange workflow using Robust Scale and Robust Regression](docs/images/orange-robust-demo-workflow.png)
+
+The **Robust Regression** widget exposes the model choice, optional median/IQR
+scaling, and per-method parameters:
+
+![Robust Regression widget settings](docs/images/orange-robust-regression-widget.png)
+
 ## Local Development
 
 ```bash

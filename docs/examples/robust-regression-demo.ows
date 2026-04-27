@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<scheme version="2.0" title="Robust regression demo" description="Example canvas for Orange3-Robust.">
+  <nodes>
+    <node id="0" name="File" qualified_name="Orange.widgets.data.owfile.OWFile" project_name="Orange3" version="" title="File" position="(80, 220)" />
+    <node id="1" name="Select Columns" qualified_name="Orange.widgets.data.owselectcolumns.OWSelectAttributes" project_name="Orange3" version="" title="Select Columns" position="(260, 220)" />
+    <node id="2" name="Robust Scale" qualified_name="orangecontrib.robust.widgets.owrobustscale.OWRobustScale" project_name="Orange3-Robust" version="" title="Robust Scale" position="(460, 220)" />
+    <node id="3" name="Robust Regression" qualified_name="orangecontrib.robust.widgets.owrobustregression.OWRobustRegression" project_name="Orange3-Robust" version="" title="Robust Regression" position="(680, 220)" />
+    <node id="4" name="Predictions" qualified_name="Orange.widgets.evaluate.owpredictions.OWPredictions" project_name="Orange3" version="" title="Predictions" position="(900, 220)" />
+    <node id="5" name="Data Table" qualified_name="Orange.widgets.data.owtable.OWTable" project_name="Orange3" version="" title="Predictions Table" position="(1120, 220)" />
+    <node id="6" name="Data Table" qualified_name="Orange.widgets.data.owtable.OWTable" project_name="Orange3" version="" title="Coefficients Table" position="(900, 60)" />
+  </nodes>
+  <links>
+    <link id="0" source_node_id="0" sink_node_id="1" source_channel="Data" sink_channel="Data" enabled="true" source_channel_id="data" sink_channel_id="data" />
+    <link id="1" source_node_id="1" sink_node_id="2" source_channel="Data" sink_channel="Data" enabled="true" source_channel_id="data" sink_channel_id="data" />
+    <link id="2" source_node_id="2" sink_node_id="3" source_channel="Preprocessed Data" sink_channel="Data" enabled="true" source_channel_id="preprocessed_data" sink_channel_id="data" />
+    <link id="3" source_node_id="3" sink_node_id="4" source_channel="Model" sink_channel="Predictors" enabled="true" source_channel_id="model" sink_channel_id="predictors" />
+    <link id="4" source_node_id="2" sink_node_id="4" source_channel="Preprocessed Data" sink_channel="Data" enabled="true" source_channel_id="preprocessed_data" sink_channel_id="data" />
+    <link id="5" source_node_id="4" sink_node_id="5" source_channel="Predictions" sink_channel="Data" enabled="true" source_channel_id="predictions" sink_channel_id="data" />
+    <link id="6" source_node_id="3" sink_node_id="6" source_channel="Coefficients" sink_channel="Data" enabled="true" source_channel_id="coefficients" sink_channel_id="data" />
+  </links>
+  <annotations />
+  <thumbnail />
+  <node_properties />
+</scheme>
