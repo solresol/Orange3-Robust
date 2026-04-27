@@ -1,35 +1,58 @@
 # Orange3-Robust
-Robust regressors plug-in for Orange
 
-# Testing locally
+Robust regression and robust preprocessing widgets for Orange.
 
-pip install -e .
-orange-canvas
+## Install From Git
 
-# To-do 
+During development, install the add-on from the GitHub repository:
 
+```bash
+pip install git+https://github.com/solresol/Orange3-Robust.git
+```
 
-orangecontrib/robust/widgets/__init__.py should define the category ICON, BACKGROUND, and WIDGET_HELP_PATH; Orange uses these when it registers your orange.widgets entry point and when users press F1. 
+Then open Orange. The widgets should appear in the **Robust** category:
 
-There are some notes at the end of orangecontrib/robust/widgets/owrobustregression.py
+- **Robust Scale**: median centering and quantile-range scaling.
+- **Robust Regression**: Huber, RANSAC, and Theil-Sen regression learners.
 
-# Getting on to the official add-ons list
+If you are using the standalone Orange app, use the Python environment that
+belongs to that Orange installation. If the Add-ons dialog supports URL/package
+installation in that build, use the same Git URL.
 
-Orange’s Add‑ons dialog is curated. The list the Canvas shows comes from a file generated in biolab/orange3-addons (they fetch PyPI metadata and serve a compiled list at https://orange.biolab.si/addons/list). To be included:
-	•	Ensure your package is on PyPI and installs cleanly.
-	•	Open a PR adding your package name to OFFICIAL_ADDONS.txt in that repo. The maintainers review and regenerate the list.  ￼
+## Local Development
 
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -e '.[test]'
+pytest
+QT_QPA_PLATFORM=offscreen python -m Orange.canvas
+```
 
-# Behavioural notes & defaults (avoid foot‑guns)
+## Current Behaviour
 
-	•	Theil–Sen can be slow on large n_samples unless you set n_subsamples or keep max_subpopulation modest. Consider exposing both and defaulting max_subpopulation=10_000.  ￼
-	•	Huber: expose epsilon and alpha; explain that smaller epsilon ⇒ more aggressive outlier handling. Encourage scaling (toggle).  ￼
-	•	RANSAC: leave residual_threshold=None by default so it uses MAD(y); surface min_samples, max_trials, and stop_probability. Consider a small note/warning in the GUI when too few inliers are found.  ￼
+The **Robust Regression** widget outputs:
 
-# How to
+- an Orange learner, suitable for **Test & Score** and **Predictions**;
+- a fitted model when data with a continuous target is connected;
+- annotated data containing predictions, residuals, and RANSAC inlier flags
+  when available;
+- a coefficient table when the fitted estimator exposes coefficients.
 
-	•	Base your code on the Example Add‑on docs/tutorial (entry points, help, and the widget boilerplate are exactly as described there).  ￼
-                  -> https://orange3-example-addon.readthedocs.io/en/latest/
-	•	For the widget framework, the Orange Widget Base tutorial shows how to define inputs/outputs and create the left‑hand controls.  ￼
-                  -> https://orange-widget-base.readthedocs.io/en/stable/tutorial.html
+The **Robust Scale** widget outputs both a preprocessor and a transformed table,
+so it can be placed before other Orange learners as well as the robust learners.
 
+## Why This Exists
+
+The COMP2200 robust-regression material uses Orange for the ordinary linear
+regression workflow, but Theil-Sen and RANSAC currently have to move into
+Python for a clean comparison. This add-on fills that gap.
+
+## Release Checklist
+
+- Keep tests passing in a clean virtual environment.
+- Verify `pip install git+https://github.com/solresol/Orange3-Robust.git`.
+- Open Orange and confirm the **Robust** category loads.
+- Wire `File -> Select Columns -> Robust Regression -> Predictions`.
+- Publish to PyPI as `Orange3-Robust`.
+- Request inclusion in `biolab/orange3-addons` once PyPI install is stable.
