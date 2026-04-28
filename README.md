@@ -45,6 +45,17 @@ the recommended wiring:
 
 ![Orange workflow using Robust Regression](docs/images/orange-robust-demo-workflow.png)
 
+A vector export of the same workspace is also available:
+
+![Robust regression demo workflow SVG](docs/images/robust-regression-demo.svg)
+
+For a visual-output example, open
+`docs/examples/robust-regression-histogram-demo.ows`. It reads the sample
+housing data, fits both **Robust Regression** and Orange's ordinary
+**Linear Regression**, sends both models to **Predictions**, and includes
+side-by-side **Distributions** widgets for inspecting robust output and model
+prediction histograms.
+
 The **Robust Regression** widget exposes the model choice, optional median/IQR
 scaling, and per-method parameters:
 

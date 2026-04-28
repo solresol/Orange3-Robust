@@ -32,7 +32,7 @@ def test_orange_widget_discovery_finds_robust_category():
     }
 
 
-def test_demo_workflow_loads():
+def _load_workflow(name):
     from orangecanvas.registry import WidgetRegistry
     from orangecanvas.scheme import Scheme
     from orangecanvas.scheme.readwrite import scheme_load
@@ -48,11 +48,15 @@ def test_demo_workflow_loads():
         Path(__file__).resolve().parents[1]
         / "docs"
         / "examples"
-        / "robust-regression-demo.ows"
+        / name
     )
     with workflow.open("rb") as stream:
         scheme_load(scheme, stream, registry=registry)
+    return scheme
 
+
+def test_demo_workflow_loads():
+    scheme = _load_workflow("robust-regression-demo.ows")
     assert [node.title for node in scheme.nodes] == [
         "File",
         "Select Columns",
@@ -62,3 +66,17 @@ def test_demo_workflow_loads():
         "Annotated Data",
     ]
     assert len(scheme.links) == 6
+
+
+def test_histogram_demo_workflow_loads():
+    scheme = _load_workflow("robust-regression-histogram-demo.ows")
+    assert [node.title for node in scheme.nodes] == [
+        "File",
+        "Select Columns",
+        "Robust Regression",
+        "Linear Regression",
+        "Predictions",
+        "Robust Output Histogram",
+        "Prediction Comparison Histogram",
+    ]
+    assert len(scheme.links) == 8

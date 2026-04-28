@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<scheme version="2.0" title="Robust regression histogram demo" description="Compare robust-regression output with ordinary regression predictions in Orange.">
+  <nodes>
+    <node id="0" name="File" qualified_name="Orange.widgets.data.owfile.OWFile" project_name="Orange3" version="" title="File" position="(120, 260)" />
+    <node id="1" name="Select Columns" qualified_name="Orange.widgets.data.owselectcolumns.OWSelectAttributes" project_name="Orange3" version="" title="Select Columns" position="(320, 260)" />
+    <node id="2" name="Robust Regression" qualified_name="orangecontrib.robust.widgets.owrobustregression.OWRobustRegression" project_name="Orange3-Robust" version="" title="Robust Regression" position="(560, 180)" />
+    <node id="3" name="Linear Regression" qualified_name="Orange.widgets.model.owlinearregression.OWLinearRegression" project_name="Orange3" version="" title="Linear Regression" position="(560, 360)" />
+    <node id="4" name="Predictions" qualified_name="Orange.widgets.evaluate.owpredictions.OWPredictions" project_name="Orange3" version="" title="Predictions" position="(800, 300)" />
+    <node id="5" name="Distributions" qualified_name="Orange.widgets.visualize.owdistributions.OWDistributions" project_name="Orange3" version="" title="Robust Output Histogram" position="(800, 120)" />
+    <node id="6" name="Distributions" qualified_name="Orange.widgets.visualize.owdistributions.OWDistributions" project_name="Orange3" version="" title="Prediction Comparison Histogram" position="(1040, 300)" />
+  </nodes>
+  <links>
+    <link id="0" source_node_id="0" sink_node_id="1" source_channel="Data" sink_channel="Data" enabled="true" source_channel_id="data" sink_channel_id="data" />
+    <link id="1" source_node_id="1" sink_node_id="2" source_channel="Data" sink_channel="Data" enabled="true" source_channel_id="data" sink_channel_id="data" />
+    <link id="2" source_node_id="1" sink_node_id="3" source_channel="Data" sink_channel="Data" enabled="true" source_channel_id="data" sink_channel_id="data" />
+    <link id="3" source_node_id="1" sink_node_id="4" source_channel="Data" sink_channel="Data" enabled="true" source_channel_id="data" sink_channel_id="data" />
+    <link id="4" source_node_id="2" sink_node_id="4" source_channel="Model" sink_channel="Predictors" enabled="true" source_channel_id="model" sink_channel_id="predictors" />
+    <link id="5" source_node_id="3" sink_node_id="4" source_channel="Model" sink_channel="Predictors" enabled="true" source_channel_id="model" sink_channel_id="predictors" />
+    <link id="6" source_node_id="2" sink_node_id="5" source_channel="Annotated Data" sink_channel="Data" enabled="true" source_channel_id="annotated_data" sink_channel_id="data" />
+    <link id="7" source_node_id="4" sink_node_id="6" source_channel="Predictions" sink_channel="Data" enabled="true" source_channel_id="annotated" sink_channel_id="data" />
+  </links>
+  <annotations />
+  <thumbnail />
+  <node_properties>
+    <properties node_id="0" format="pickle">gASVzQAAAAAAAAB9lCiMDHJlY2VudF9wYXRoc5RdlIweb3Jhbmdld2lkZ2V0LnV0aWxzLmZpbGVk
+aWFsb2dzlIwKUmVjZW50UGF0aJSTlCmBlH2UKIwHYWJzcGF0aJSMAJSMBnByZWZpeJSMD3NhbXBs
+ZS1kYXRhc2V0c5SMB3JlbHBhdGiUjAtob3VzaW5nLnRhYpSMBXRpdGxllGgJjAVzaGVldJRoCYwL
+ZmlsZV9mb3JtYXSUTnViYYwGc291cmNllEsAjAtfX3ZlcnNpb25fX5RLAXUu
+</properties>
+    <properties node_id="2" format="literal">{'learner_name': 'Huber', 'robust_scale': True}</properties>
+  </node_properties>
+</scheme>
