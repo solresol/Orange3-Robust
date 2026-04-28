@@ -69,7 +69,7 @@ class OWRobustRegression(OWBaseWidget):
         self.data = None
 
         model_box = gui.widgetBox(self.controlArea, "Model")
-        gui.comboBox(
+        self.learner_combo = gui.comboBox(
             model_box,
             self,
             "learner_name",
@@ -242,33 +242,18 @@ class OWRobustRegression(OWBaseWidget):
         return box
 
     def _update_visible_parameters(self):
-        learner_name = self._learner_name()
         for name, box in self._parameter_boxes.items():
-            box.setVisible(name == learner_name)
-
-    def _learner_name(self):
-        value = self.learner_name
-        if isinstance(value, int):
-            if 0 <= value < len(self.LEARNER_NAMES):
-                value = self.LEARNER_NAMES[value]
-            else:
-                value = self.LEARNER_NAMES[0]
-            self.learner_name = value
-        elif value not in self.LEARNERS:
-            value = self.LEARNER_NAMES[0]
-            self.learner_name = value
-        return value
+            box.setVisible(name == self.learner_name)
 
     def _params(self):
-        learner_name = self._learner_name()
-        if learner_name == "Huber":
+        if self.learner_name == "Huber":
             return {
                 "epsilon": self.huber_epsilon,
                 "alpha": self.huber_alpha,
                 "max_iter": self.huber_max_iter,
                 "fit_intercept": self.huber_fit_intercept,
             }
-        if learner_name == "RANSAC":
+        if self.learner_name == "RANSAC":
             params = {
                 "max_trials": self.ransac_max_trials,
                 "stop_probability": self.ransac_stop_probability,
@@ -294,11 +279,14 @@ class OWRobustRegression(OWBaseWidget):
         return params
 
     def _build_learner(self):
-        learner_cls = self.LEARNERS[self._learner_name()]
+        learner_cls = self.LEARNERS[self.learner_name]
         kwargs = self._params()
         if self.robust_scale:
             kwargs["preprocessors"] = [RobustScale()]
-        return learner_cls(**kwargs)
+        learner = learner_cls(**kwargs)
+        if self.robust_scale:
+            learner.use_default_preprocessors = True
+        return learner
 
     def _send_learner(self):
         self.Outputs.learner.send(self._build_learner())
@@ -357,8 +345,8 @@ class OWRobustRegression(OWBaseWidget):
         ]
         meta_vars.extend(
             [
-                ContinuousVariable(f"{self._learner_name()} Prediction"),
-                ContinuousVariable(f"{self._learner_name()} Residual"),
+                ContinuousVariable(f"{self.learner_name} Prediction"),
+                ContinuousVariable(f"{self.learner_name} Residual"),
             ]
         )
 
@@ -387,7 +375,7 @@ class OWRobustRegression(OWBaseWidget):
         if coefs is None:
             return None
 
-        names = [var.name for var in self.data.domain.attributes]
+        names = [var.name for var in model.domain.attributes]
         values = np.asarray(coefs, dtype=float).ravel()
 
         if intercept is not None:

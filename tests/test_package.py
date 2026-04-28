@@ -1,4 +1,5 @@
 from importlib.metadata import entry_points
+from pathlib import Path
 
 
 def test_orange_widget_entry_point_is_registered():
@@ -29,3 +30,35 @@ def test_orange_widget_discovery_finds_robust_category():
         "Robust Regression",
         "Robust Scale",
     }
+
+
+def test_demo_workflow_loads():
+    from orangecanvas.registry import WidgetRegistry
+    from orangecanvas.scheme import Scheme
+    from orangecanvas.scheme.readwrite import scheme_load
+    from orangewidget.workflow.discovery import WidgetDiscovery
+
+    registry = WidgetRegistry()
+    discovery = WidgetDiscovery(registry)
+    discovery.run("orange.widgets")
+    discovery.run("orangecontrib.robust.widgets")
+
+    scheme = Scheme()
+    workflow = (
+        Path(__file__).resolve().parents[1]
+        / "docs"
+        / "examples"
+        / "robust-regression-demo.ows"
+    )
+    with workflow.open("rb") as stream:
+        scheme_load(scheme, stream, registry=registry)
+
+    assert [node.title for node in scheme.nodes] == [
+        "File",
+        "Select Columns",
+        "Robust Regression",
+        "Test and Score",
+        "Coefficients Table",
+        "Annotated Data",
+    ]
+    assert len(scheme.links) == 6

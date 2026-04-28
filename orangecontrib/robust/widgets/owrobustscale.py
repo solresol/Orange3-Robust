@@ -70,6 +70,7 @@ class OWRobustScale(OWBaseWidget):
             label="upper quantile",
             callback=self.commit,
         )
+        gui.rubber(self.controlArea)
         self.commit()
 
     @Inputs.data

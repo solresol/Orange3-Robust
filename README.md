@@ -32,17 +32,18 @@ Restart Orange after installing so the widget registry is refreshed.
 
 For a new workflow:
 
-1. Add **File** or **Paint Data**.
+1. Add **Datasets**, **File**, or **Paint Data**.
 2. Add **Select Columns** and set a continuous target variable.
-3. Add **Robust Scale** if you want median/IQR preprocessing before modelling.
-4. Add **Robust Regression** and choose **Huber**, **RANSAC**, or **Theil-Sen**.
+3. Add **Robust Regression** and choose **Huber**, **RANSAC**, or **Theil-Sen**.
+4. Turn on **Scale features by median and IQR before fitting** if you want
+   robust scaling inside that learner.
 5. Connect **Robust Regression** to **Predictions**, **Test & Score**, or
    **Data Table** outputs as needed.
 
 The checked demo workflow in `docs/examples/robust-regression-demo.ows` shows
 the recommended wiring:
 
-![Orange workflow using Robust Scale and Robust Regression](docs/images/orange-robust-demo-workflow.png)
+![Orange workflow using Robust Regression](docs/images/orange-robust-demo-workflow.png)
 
 The **Robust Regression** widget exposes the model choice, optional median/IQR
 scaling, and per-method parameters:
@@ -70,7 +71,10 @@ The **Robust Regression** widget outputs:
 - a coefficient table when the fitted estimator exposes coefficients.
 
 The **Robust Scale** widget outputs both a preprocessor and a transformed table,
-so it can be placed before other Orange learners as well as the robust learners.
+so it can be placed before other Orange learners or used to inspect/export a
+median/IQR-scaled table. Do not put **Robust Scale** before **Robust
+Regression** if the regression widget's internal scaling checkbox is also on,
+because that will scale continuous features twice.
 
 ## Why This Exists
 
@@ -83,6 +87,6 @@ Python for a clean comparison. This add-on fills that gap.
 - Keep tests passing in a clean virtual environment.
 - Verify `pip install git+https://github.com/solresol/Orange3-Robust.git`.
 - Open Orange and confirm the **Robust** category loads.
-- Wire `File -> Select Columns -> Robust Regression -> Predictions`.
+- Wire `File -> Select Columns -> Robust Regression -> Test & Score`.
 - Publish to PyPI as `Orange3-Robust`.
 - Request inclusion in `biolab/orange3-addons` once PyPI install is stable.
