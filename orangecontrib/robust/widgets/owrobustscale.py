@@ -10,7 +10,7 @@ from orangecontrib.robust.preprocess import RobustScale
 class OWRobustScale(OWBaseWidget):
     name = "Robust Scale"
     description = "Center continuous features by median and scale by IQR."
-    icon = "icons/robust.svg"
+    icon = "icons/RobustScale.svg"
     priority = 40
 
     class Inputs:

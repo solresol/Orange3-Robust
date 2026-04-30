@@ -17,7 +17,7 @@ from orangecontrib.robust.preprocess import RobustScale
 class OWRobustRegression(OWBaseWidget):
     name = "Robust Regression"
     description = "Theil-Sen, RANSAC, and Huber regression."
-    icon = "icons/robust.svg"
+    icon = "icons/RobustRegression.svg"
     priority = 50
 
     class Inputs:
