@@ -3,7 +3,12 @@ import numpy as np
 from Orange.data import ContinuousVariable, Domain, StringVariable, Table, TimeVariable
 from Orange.regression.linear import LinearRegressionLearner
 
-from orangecontrib.robust.learners import HuberLearner, RANSACLearner, TheilSenLearner
+from orangecontrib.robust.learners import (
+    HuberLearner,
+    LeastAbsoluteDeviationLearner,
+    RANSACLearner,
+    TheilSenLearner,
+)
 from orangecontrib.robust.preprocess import RobustScale
 
 
@@ -18,6 +23,7 @@ def test_robust_learners_fit_and_predict():
 
     learners = [
         HuberLearner(max_iter=200),
+        LeastAbsoluteDeviationLearner(),
         RANSACLearner(random_state=0),
         TheilSenLearner(random_state=0, max_subpopulation=10000),
     ]
@@ -41,6 +47,7 @@ def test_learners_accept_robust_scale_preprocessor():
 def _learner_variants():
     return [
         HuberLearner(max_iter=500),
+        LeastAbsoluteDeviationLearner(),
         RANSACLearner(random_state=0, max_trials=25),
         TheilSenLearner(random_state=0, max_subpopulation=100, max_iter=10),
     ]
@@ -91,3 +98,13 @@ def test_robust_learners_ignore_text_metas_like_ols():
     data = Table(domain, x_values.reshape(-1, 1), 4 * x_values + 1, metas=metas)
 
     _assert_same_preprocessed_domain_as_ols(data)
+
+
+def test_least_absolute_deviation_learns_configurable_quantiles():
+    data = regression_table()
+
+    median_model = LeastAbsoluteDeviationLearner(quantile=0.5)(data)
+    upper_model = LeastAbsoluteDeviationLearner(quantile=0.8)(data)
+
+    assert np.all(np.isfinite(median_model(data)))
+    assert np.all(np.isfinite(upper_model(data)))

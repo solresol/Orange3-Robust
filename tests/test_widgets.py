@@ -6,7 +6,7 @@ from AnyQt.QtWidgets import QApplication
 import numpy as np
 from Orange.data import ContinuousVariable, DiscreteVariable, Domain, Table
 
-from orangecontrib.robust.learners import RANSACLearner
+from orangecontrib.robust.learners import LeastAbsoluteDeviationLearner, RANSACLearner
 from orangecontrib.robust.widgets.owrobustregression import OWRobustRegression
 
 
@@ -37,6 +37,11 @@ def test_robust_regression_combo_box_stores_selected_value():
     widget = OWRobustRegression()
     try:
         widget.learner_combo.setCurrentIndex(1)
+        widget.learner_combo.textActivated.emit("Least Absolute Deviation")
+        assert widget.learner_name == "Least Absolute Deviation"
+        assert isinstance(widget._build_learner(), LeastAbsoluteDeviationLearner)
+
+        widget.learner_combo.setCurrentIndex(2)
         widget.learner_combo.textActivated.emit("RANSAC")
         assert widget.learner_name == "RANSAC"
         assert isinstance(widget._build_learner(), RANSACLearner)

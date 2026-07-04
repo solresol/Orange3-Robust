@@ -8,6 +8,7 @@ from orangewidget.widget import Input, Msg, OWBaseWidget, Output
 
 from orangecontrib.robust.learners import (
     HuberLearner,
+    LeastAbsoluteDeviationLearner,
     RANSACLearner,
     TheilSenLearner,
 )
@@ -16,7 +17,7 @@ from orangecontrib.robust.preprocess import RobustScale
 
 class OWRobustRegression(OWBaseWidget):
     name = "Robust Regression"
-    description = "Theil-Sen, RANSAC, and Huber regression."
+    description = "Theil-Sen, RANSAC, Huber, and least absolute deviation regression."
     icon = "icons/RobustRegression.svg"
     priority = 50
 
@@ -57,8 +58,13 @@ class OWRobustRegression(OWBaseWidget):
     huber_max_iter = Setting(200)
     huber_fit_intercept = Setting(True)
 
+    lad_quantile = Setting(0.5)
+    lad_alpha = Setting(0.0)
+    lad_fit_intercept = Setting(True)
+
     LEARNERS = {
         "Huber": HuberLearner,
+        "Least Absolute Deviation": LeastAbsoluteDeviationLearner,
         "RANSAC": RANSACLearner,
         "Theil-Sen": TheilSenLearner,
     }
@@ -87,6 +93,7 @@ class OWRobustRegression(OWBaseWidget):
 
         self._parameter_boxes = {
             "Huber": self._make_huber_box(),
+            "Least Absolute Deviation": self._make_lad_box(),
             "RANSAC": self._make_ransac_box(),
             "Theil-Sen": self._make_theilsen_box(),
         }
@@ -128,6 +135,37 @@ class OWRobustRegression(OWBaseWidget):
             box,
             self,
             "huber_fit_intercept",
+            "Fit intercept",
+            callback=self._on_change,
+        )
+        return box
+
+    def _make_lad_box(self):
+        box = gui.widgetBox(self.controlArea, "Least Absolute Deviation")
+        gui.doubleSpin(
+            box,
+            self,
+            "lad_quantile",
+            minv=0.01,
+            maxv=0.99,
+            step=0.01,
+            label="quantile (0.5 = median/LAD)",
+            callback=self._on_change,
+        )
+        gui.doubleSpin(
+            box,
+            self,
+            "lad_alpha",
+            minv=0.0,
+            maxv=1000.0,
+            step=0.01,
+            label="regularization strength",
+            callback=self._on_change,
+        )
+        gui.checkBox(
+            box,
+            self,
+            "lad_fit_intercept",
             "Fit intercept",
             callback=self._on_change,
         )
@@ -252,6 +290,12 @@ class OWRobustRegression(OWBaseWidget):
                 "alpha": self.huber_alpha,
                 "max_iter": self.huber_max_iter,
                 "fit_intercept": self.huber_fit_intercept,
+            }
+        if self.learner_name == "Least Absolute Deviation":
+            return {
+                "quantile": self.lad_quantile,
+                "alpha": self.lad_alpha,
+                "fit_intercept": self.lad_fit_intercept,
             }
         if self.learner_name == "RANSAC":
             params = {

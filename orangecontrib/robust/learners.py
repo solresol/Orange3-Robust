@@ -62,3 +62,20 @@ class RANSACLearner(SklLearner):
     ):
         super().__init__(preprocessors=preprocessors)
         self.params = vars()
+
+
+class LeastAbsoluteDeviationLearner(SklLearner):
+    __wraps__ = skl.QuantileRegressor  # quantile=0.5 is least absolute deviation
+    name = "Least Absolute Deviation"
+
+    def __init__(
+        self,
+        preprocessors=None,
+        quantile=0.5,
+        alpha=0.0,
+        fit_intercept=True,
+        solver="highs",
+        solver_options=None,
+    ):
+        super().__init__(preprocessors=preprocessors)
+        self.params = vars()

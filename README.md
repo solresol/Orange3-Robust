@@ -1,103 +1,73 @@
-# Orange3-Robust
+# Robust Regression for Orange
 
-Robust regression and robust preprocessing widgets for Orange.
+This Orange add-on adds two widgets for learning how regression behaves when a
+data set contains outliers.
 
-## Install From Git
+Ordinary linear regression fits the line or plane that minimizes squared error.
+That makes large errors very influential: a few unusual rows can pull the model
+away from the main pattern. Robust regression methods reduce that effect in
+different ways.
 
-During development, install the add-on from the GitHub repository:
+## Widgets
 
-```bash
-pip install git+https://github.com/solresol/Orange3-Robust.git
-```
+### Robust Regression
 
-Then open Orange. The widgets should appear in the **Robust** category:
+Fits a robust linear regression learner. The widget currently includes:
 
-- **Robust Scale**: median centering and quantile-range scaling.
-- **Robust Regression**: Huber, RANSAC, and Theil-Sen regression learners.
+- **Huber**: behaves like ordinary least squares for small residuals, but gives
+  less influence to large residuals.
+- **Least Absolute Deviation**: fits by absolute error when the quantile is
+  `0.5`, so it targets the conditional median rather than the conditional mean.
+  You can change the quantile to fit lower or upper conditional quantiles.
+- **RANSAC**: repeatedly fits candidate models from small subsets, then keeps
+  the model supported by the largest group of inliers.
+- **Theil-Sen**: estimates slopes from many small subsets and combines them in a
+  way that is resistant to outliers.
 
-If you are using the standalone Orange app, use the Python environment that
-belongs to that Orange installation. If the Add-ons dialog supports URL/package
-installation in that build, use the same Git URL.
+The widget outputs a learner for **Test and Score** and **Predictions**. If you
+connect a data set with a continuous target variable, it also outputs a fitted
+model, a coefficient table, and an annotated data table.
 
-For the macOS standalone app this command installs into Orange's bundled Python:
+### Robust Scale
 
-```bash
-/Applications/Orange.app/Contents/MacOS/python -m pip install \
-  git+https://github.com/solresol/Orange3-Robust.git
-```
+Centers continuous features by the median and scales them by a quantile range,
+usually the interquartile range. This is useful when large values should not
+determine the scale of a feature.
 
-Restart Orange after installing so the widget registry is refreshed.
+## Suggested Workflow
 
-## Using in Orange
+1. Add **File** or **Datasets**.
+2. Add **Select Columns** and choose a continuous target variable.
+3. Add **Robust Regression**.
+4. Connect **Robust Regression** to **Test and Score** or **Predictions**.
+5. Connect the **Annotated Data** output to **Data Table** to inspect residuals.
+6. Connect the **Coefficients** output to **Data Table** to inspect fitted terms.
 
-For a new workflow:
-
-1. Add **Datasets**, **File**, or **Paint Data**.
-2. Add **Select Columns** and set a continuous target variable.
-3. Add **Robust Regression** and choose **Huber**, **RANSAC**, or **Theil-Sen**.
-4. Turn on **Scale features by median and IQR before fitting** if you want
-   robust scaling inside that learner.
-5. Connect **Robust Regression** to **Predictions**, **Test & Score**, or
-   **Data Table** outputs as needed.
-
-The checked demo workflow in `docs/examples/robust-regression-demo.ows` shows
-the recommended wiring:
+The demo workflow in `docs/examples/robust-regression-demo.ows` shows this
+layout:
 
 ![Orange workflow using Robust Regression](docs/images/orange-robust-demo-workflow.png)
 
-A vector export of the same workspace is also available:
-
-![Robust regression demo workflow SVG](docs/images/robust-regression-demo.svg)
-
-For a visual-output example, open
-`docs/examples/robust-regression-histogram-demo.ows`. It reads the sample
-housing data, fits both **Robust Regression** and Orange's ordinary
-**Linear Regression**, sends both models to **Predictions**, and includes
-side-by-side **Distributions** widgets for inspecting robust output and model
-prediction histograms.
-
-The **Robust Regression** widget exposes the model choice, optional median/IQR
-scaling, and per-method parameters:
+One set of widget settings looks like this:
 
 ![Robust Regression widget settings](docs/images/orange-robust-regression-widget.png)
 
-## Local Development
+## What To Inspect
 
-```bash
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -e '.[test]'
-pytest
-QT_QPA_PLATFORM=offscreen python -m Orange.canvas
-```
+The **Annotated Data** output adds:
 
-## Current Behaviour
+- the model prediction for each row;
+- the residual, computed as actual value minus prediction;
+- a RANSAC inlier flag when RANSAC is selected.
 
-The **Robust Regression** widget outputs:
+The **Coefficients** output lists the intercept and fitted coefficients when the
+selected method exposes them. These are useful for comparing robust fits with
+ordinary linear regression on the same data.
 
-- an Orange learner, suitable for **Test & Score** and **Predictions**;
-- a fitted model when data with a continuous target is connected;
-- annotated data containing predictions, residuals, and RANSAC inlier flags
-  when available;
-- a coefficient table when the fitted estimator exposes coefficients.
+## Notes
 
-The **Robust Scale** widget outputs both a preprocessor and a transformed table,
-so it can be placed before other Orange learners or used to inspect/export a
-median/IQR-scaled table. Do not put **Robust Scale** before **Robust
-Regression** if the regression widget's internal scaling checkbox is also on,
-because that will scale continuous features twice.
+Do not use **Robust Scale** before **Robust Regression** if the regression
+widget's internal scaling checkbox is also enabled, because that scales
+continuous features twice.
 
-## Why This Exists
-
-The COMP2200 robust-regression material uses Orange for the ordinary linear
-regression workflow, but Theil-Sen and RANSAC currently have to move into
-Python for a clean comparison. This add-on fills that gap.
-
-## Release Checklist
-
-- Keep tests passing in a clean virtual environment.
-- Verify `pip install git+https://github.com/solresol/Orange3-Robust.git`.
-- Open Orange and confirm the **Robust** category loads.
-- Wire `File -> Select Columns -> Robust Regression -> Test & Score`.
-- Publish to PyPI as `Orange3-Robust`.
-- Request inclusion in `biolab/orange3-addons` once PyPI install is stable.
+Developer setup and release notes are in `DEVELOPMENT.md`.

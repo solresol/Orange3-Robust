@@ -1,15 +1,29 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "Orange3-Robust"
 version = "0.1.0"
-description = "Robust linear regression (Theil–Sen, RANSAC, Huber) for Orange."
+description = "Robust linear regression (Huber, LAD, RANSAC, Theil–Sen) for Orange."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = ["Orange3>=3.39", "scikit-learn>=1.2"]
 keywords = ["orange3 add-on", "orange", "robust regression"]
+authors = [{ name = "Greg Baker", email = "gregb@ifost.org.au" }]
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Plugins",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering",
+]
 
 [project.optional-dependencies]
 test = ["pytest>=7", "PyQt6>=6.5", "PyQt6-WebEngine>=6.5"]
@@ -22,7 +36,8 @@ test = ["pytest>=7", "PyQt6>=6.5", "PyQt6-WebEngine>=6.5"]
 
 [project.urls]
 Homepage = "https://github.com/solresol/Orange3-Robust"
-Documentation = "https://orange3-robust.readthedocs.io/"
+Repository = "https://github.com/solresol/Orange3-Robust"
+Issues = "https://github.com/solresol/Orange3-Robust/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
