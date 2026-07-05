@@ -8,6 +8,18 @@ That makes large errors very influential: a few unusual rows can pull the model
 away from the main pattern. Robust regression methods reduce that effect in
 different ways.
 
+## Installing
+
+In Orange, open **Options** > **Add-ons...**, choose **Add more...**, enter the
+package name, and restart Orange after installation finishes:
+
+```text
+Orange3-Robust
+```
+
+A screenshot walkthrough is available in the
+[GitHub documentation](https://github.com/solresol/Orange3-Robust/blob/main/docs/installing-in-orange.md).
+
 ## Widgets
 
 ### Robust Regression
@@ -43,14 +55,18 @@ determine the scale of a feature.
 5. Connect the **Annotated Data** output to **Data Table** to inspect residuals.
 6. Connect the **Coefficients** output to **Data Table** to inspect fitted terms.
 
+The robust regression widget lets you choose the method:
+
+![Choosing a robust regression method](https://raw.githubusercontent.com/solresol/Orange3-Robust/main/docs/images/choosing-robust-regressor.png)
+
 The demo workflow in `docs/examples/robust-regression-demo.ows` shows this
 layout:
 
-![Orange workflow using Robust Regression](docs/images/orange-robust-demo-workflow.png)
+![Orange workflow using Robust Regression](https://raw.githubusercontent.com/solresol/Orange3-Robust/main/docs/images/orange-robust-demo-workflow.png)
 
 One set of widget settings looks like this:
 
-![Robust Regression widget settings](docs/images/orange-robust-regression-widget.png)
+![Robust Regression widget settings](https://raw.githubusercontent.com/solresol/Orange3-Robust/main/docs/images/orange-robust-regression-widget.png)
 
 ## What To Inspect
 
